@@ -16,7 +16,7 @@ import java.util.Set;
 public class Main {
     public static void main(String[] args) throws Exception {
         if (args.length != 2) {
-            System.err.println("Usage: java Main input.owl output.ttl");
+            System.err.println("Usage: java -jar realization-wrapper.jar input.owl output.ttl");
             System.exit(1);
         }
 
