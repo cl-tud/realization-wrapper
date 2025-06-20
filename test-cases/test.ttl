@@ -1,0 +1,49 @@
+@prefix : <http://example.org#> .
+@prefix ex: <http://example.org#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+:role1 rdf:type owl:ObjectProperty .
+:role2 rdf:type owl:ObjectProperty .
+
+#################################################################
+#    Classes
+#################################################################
+
+:Class1 rdf:type owl:Class .
+
+#################################################################
+#    Individuals
+#################################################################
+
+:i1 rdf:type owl:NamedIndividual .
+:i2 rdf:type owl:NamedIndividual .
+:x rdf:type owl:NamedIndividual ;
+           :role1 :i1 .
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:Restriction ;
+  owl:onProperty :role1 ;
+  owl:hasValue :i1 ;
+  rdfs:subClassOf [ rdf:type owl:Restriction ;
+                    owl:onProperty :role2 ;
+                    owl:hasValue :i2
+                  ]
+] .
+
+
+[ rdf:type owl:Restriction ;
+  owl:onProperty :role2 ;
+  owl:hasValue :i2 ;
+  rdfs:subClassOf :Class1
+] .
