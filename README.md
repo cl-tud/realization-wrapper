@@ -1,13 +1,30 @@
-# Realization Wrapper
+# Realization Wrapper Branches
 
-A simple wrapper for HermiT's OWL API capable of completing the data graph and providing all class and object property assertions given an ontology.
+This project is maintained in three Git branches:
 
-## Usage:
-After obtaining the jar file, either from the Releases section or by building from sources, execute:
+1) `Naive`: Naive implementation (nested loops, checking each possible consequence explicitly).
+
+The next ones use the OWL API `InferredOntologyGenerator` to compute the chosen consequences. We are interested in class and role assertions, so we use: `InferredClassAssertionAxiomGenerator` and `InferredPropertyAssertionGenerator`.
+
+2) `Pellet`: Only uses Pellet.
+3) `HermitJFact`: Uses any of the reasoners: `HermiT`, `JFact`, `ELK` or `StructuralReasoner`. The choice of the reasoner has to be provided as a commandline argument. Note that `ELK` and `StructuralReasoner` do not compute the required class and role assertions, hence for our use only `HermiT` and `JFact` are useful.
+
+# Running
+Either get the relevant JAR from the releases section or build it from the source (see below.)
+
+1,2) Naive + Pellet, run:
 ```
-java -jar realization-wrapper.jar <INPUT ONTOLOGY PATH> <OUTPUT-ONTOLOGY PATH>
+java -jar realization-wrapper-*.jar <input.owl> <output.ttl> 
 ```
-for example, assume the file [test-cases/test.ttl](test-cases/test.ttl), with the following content:
+
+3) HermitJFact
+```
+java -jar target/realization-wrapper-1.0.jar <input.owl> <output.ttl> <hermit|jfact|elk|struct>
+```
+
+# Usage:
+
+Assume the file [test-cases/test.ttl](test-cases/test.ttl), with the following content:
 ```
 @prefix : <http://example.org#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -40,7 +57,9 @@ for example, assume the file [test-cases/test.ttl](test-cases/test.ttl), with th
 ] .
 
 ```
-Running `java -jar realization-reasoner.jar test-cases/test.ttl test-out.ttl` will produce an output `test-out.ttl` file containing the expected conclusions, i.e.
+
+We get:
+
 ```
 <http://example.org#x> rdf:type owl:NamedIndividual ,
                                 <http://example.org#Class1> ,
@@ -49,10 +68,35 @@ Running `java -jar realization-reasoner.jar test-cases/test.ttl test-out.ttl` wi
                        <http://example.org#role2> <http://example.org#i2> .
 ```
 
-## Building:
-Run:
 
+
+
+# Building
+- Check out the relevant branch. 
+- Build: `mvn clean package`
+- Run with (depending on the choice of the reasoner):
 ```
-mvn clean package
+java -jar realization-wrapper-*.jar <input.owl> <output.ttl>
 ```
-in the cloned repository directory. A fat jar file will be created in the [target](target) directory.
+or 
+```
+java -jar realization-wrapper-*.jar <input.owl> <output.ttl> <reasoner>
+```
+
+
+
+**Main (naive)**
+- Checkout the `main` branch.
+- Build: `mvn clean package`
+- Run: `java -jar target/realization-wrapper-1.0.jar <input.owl> <output.ttl>`
+
+**Pellet branch**
+- Checkout the `pellet` branch (or use the `realization-wrapper-pellet-only/` folder if you have it unpacked separately).
+- Build: `cd realization-wrapper-pellet-only && mvn clean package`
+- Run: `java -jar target/realization-wrapper-pellet-1.0.jar <input.owl> <output.ttl>`
+
+**HermitJFact branch**
+- Checkout the `HermitJFact` branch (mirrored here under `realization-wrapper/`).
+- Build: `cd realization-wrapper && mvn clean package`
+- Run: `java -jar target/realization-wrapper-1.0.jar <input.owl> <output.ttl> <hermit|jfact|elk|struct>`
+- Note: `elk` and `struct` are available for quick checks, but they cannot fully materialize class and role assertions.
