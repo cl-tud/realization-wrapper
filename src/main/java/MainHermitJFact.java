@@ -22,7 +22,7 @@ import java.util.List;
 public class MainHermitJFact {
     public static void main(String[] args) throws Exception {
         if (args.length != 3) {
-            System.err.println("Usage: java -jar realization-wrapper.jar input.owl output.ttl [hermit | jfact]");
+            System.err.println("Usage: java -jar realization-wrapper.jar input.owl output.ttl [hermit | jfact | elk | struct]");
             System.exit(1);
         }
 
@@ -51,10 +51,6 @@ public class MainHermitJFact {
                 rf = new ElkReasonerFactory();
                 break;
 
-//            case "pellet":
-//                rf = new PelletReasonerFactory();
-//                break;
-
             case "struct":
                 rf = new StructuralReasonerFactory();
                 break;
@@ -76,12 +72,6 @@ public class MainHermitJFact {
         OWLOntology mat = man.createOntology();
 
         // configure what you want to materialise
-//        List<InferredAxiomGenerator<? extends OWLAxiom>> gens = List.of(
-//                new InferredClassAssertionAxiomGenerator(),
-//                new InferredPropertyAssertionGenerator()   // object + data
-////                new InferredSubClassAxiomGenerator(),       // if you also want TBox closure
-////                new InferredEquivalentClassAxiomGenerator()
-//        );
         List<InferredAxiomGenerator<? extends OWLAxiom>> gens =
                 Arrays.<InferredAxiomGenerator<? extends OWLAxiom>>asList(
                         new InferredClassAssertionAxiomGenerator(),
@@ -92,8 +82,7 @@ public class MainHermitJFact {
         InferredOntologyGenerator iog = new InferredOntologyGenerator(reasoner, gens);
         iog.fillOntology(df, mat);
 
-        // save ontology with all inferred assertions
-//        man.saveOntology(mat, IRI.create(outputFile));
+        // export the ontology as turtle
         man.saveOntology(mat, new TurtleDocumentFormat(), IRI.create(outputFile));
         System.out.println("Saved inferred axioms to: " + outputFile.getAbsolutePath());
     }
