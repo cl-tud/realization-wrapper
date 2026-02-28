@@ -14,8 +14,12 @@ Either get the relevant JAR from the releases section or build it from the sourc
 
 1,2) Naive + Pellet, run:
 ```
-java -jar realization-wrapper-*.jar <input.owl> <output.ttl> 
+java -jar realization-wrapper-*.jar <input.owl> <output.ttl>
 ```
+> **Note (Pellet only):** Pellet uses an older Guice/CGLIB version that requires an extra JVM flag on Java 16+:
+> ```
+> java --add-opens java.base/java.lang=ALL-UNNAMED -jar realization-wrapper-*.jar <input.owl> <output.ttl>
+> ```
 
 3) HermitJFact
 ```
@@ -94,6 +98,7 @@ java -jar realization-wrapper-*.jar <input.owl> <output.ttl> <reasoner>
 - Checkout the `pellet` branch (or use the `realization-wrapper-pellet-only/` folder if you have it unpacked separately).
 - Build: `cd realization-wrapper-pellet-only && mvn clean package`
 - Run: `java -jar target/realization-wrapper-pellet-1.0.jar <input.owl> <output.ttl>`
+- **Java 16+ only:** add `--add-opens java.base/java.lang=ALL-UNNAMED` before `-jar`
 
 **HermitJFact branch**
 - Checkout the `HermitJFact` branch (mirrored here under `realization-wrapper/`).
